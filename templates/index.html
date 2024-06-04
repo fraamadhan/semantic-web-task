@@ -54,17 +54,6 @@
       {% else %}
       <p>No data found</p>
       {% endif %} {% if pagination %}
-      <div class="pagination">
-        <span>Page {{ page }} of {{ num_pages }}</span>
-        {% if prev_page %}
-        <a href="{{ url_for('index', page=prev_page) }}">Previous</a>
-        {% endif %} {% if next_page %}
-        <a href="{{ url_for('index', page=next_page) }}">Next</a>
-        {% endif %}
-      </div>
-      {% endif %}
-    </div>
-
     <script src="" async defer></script>
   </body>
 </html>
