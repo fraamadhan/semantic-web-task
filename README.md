@@ -4,9 +4,9 @@ The task for the Semantic Web course is to create a website that implements SPAR
 
 # REQUIREMENTS
 
-> pip install Flask
-> pip install watchdog
-> pip install SPARQLWrapper
+> pip install Flask <br>
+> pip install watchdog <br>
+> pip install SPARQLWrapper <br>
 
 # HOW TO USE
 
@@ -16,4 +16,4 @@ The task for the Semantic Web course is to create a website that implements SPAR
 - Type flask run (since i'm using app.py (file name is app) you don't need to type flask --app namefile run)
 - Go to localhost:5000 or click redirect link from your terminal
 
-created with ❤ :blue_heart:
+### Created with ❤ :blue_heart:
