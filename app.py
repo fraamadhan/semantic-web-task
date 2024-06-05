@@ -33,6 +33,8 @@ def get_query(keyword=None):
                 REGEX(LCASE(?Kota), "{keyword}", "i") ||
                 REGEX(LCASE(?Kec), "{keyword}", "i") ||
                 REGEX(LCASE(?Sync), "{keyword}", "i") ||
+                REGEX(LCASE(?NPSN), "{keyword}", "i") ||
+                REGEX(LCASE(?Status), "{keyword}", "i") ||
                 REGEX(LCASE(?Guru), "{keyword}", "i") ||
                 REGEX(LCASE(?Pegawai), "{keyword}", "i")
             )
