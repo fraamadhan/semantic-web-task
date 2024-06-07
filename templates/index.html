@@ -15,7 +15,7 @@
 
     <div class="content">
       <form method="get" action="/">
-        <input type="text" name="keyword" placeholder="Search" />
+        <input type="text" name="keyword" placeholder="Search" value="{{ request.args.get('keyword', '') }}" />
         <button type="submit" id="button">Search</button>
       </form>
 
@@ -51,9 +51,20 @@
           {% endfor %}
         </tbody>
       </table>
+
+      <div class="pagination">
+        {% if current_page > 1 %}
+        <a href="?keyword={{ request.args.get('keyword', '') }}&page={{ current_page - 1 }}" class="pagination-link prev">&laquo; Prev</a>
+        {% endif %}
+        <span class="pagination-info">Page {{ current_page }} of {{ total_pages }}</span>
+        {% if current_page < total_pages %}
+        <a href="?keyword={{ request.args.get('keyword', '') }}&page={{ current_page + 1 }}" class="pagination-link next">Next &raquo;</a>
+        {% endif %}
+      </div>
       {% else %}
       <p>No data found</p>
-      {%endif%}
+      {% endif %}
+    </div>
     <script src="" async defer></script>
   </body>
 </html>

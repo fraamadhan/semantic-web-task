@@ -5,14 +5,14 @@ app = Flask(__name__)
 
 sparql_endpoint = "http://localhost:3030/data_sekolah_jawa_barat/query"  
 
-def get_query(keyword=None):
-    query = """
+def get_query(keyword=None, limit=10, offset=0):
+    query = f"""
     PREFIX id: <https://dapo.kemdikbud.go.id/>
     PREFIX item: <https://dapo.kemdikbud.go.id/sp/item#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
     SELECT ?NamaSekolah ?Provinsi ?Kota ?Kec ?NPSN ?Status ?Sync ?Guru ?Pegawai
-    WHERE {
+    WHERE {{
         ?items
             item:NamaSekolah    ?NamaSekolah ;
             item:Provinsi       ?Provinsi ;
@@ -39,20 +39,18 @@ def get_query(keyword=None):
                 REGEX(LCASE(?Pegawai), "{keyword}", "i")
             )
         '''
-    query += "}"
+    query += f"}} LIMIT {limit} OFFSET {offset}"
     return query
 
-
-def fetch_data(keyword=None):
+def fetch_data(keyword=None, page=1, limit=10):
+    offset = (page - 1) * limit
     sparql = SPARQLWrapper(sparql_endpoint)
-    sparql.setQuery(get_query(keyword))
+    sparql.setQuery(get_query(keyword, limit, offset))
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()["results"]["bindings"]
 
-    total_school = 0
     data = []
     for result in results:
-        total_school += 1
         data.append({
             'NamaSekolah': result['NamaSekolah']['value'],
             'Provinsi': result['Provinsi']['value'],
@@ -65,13 +63,21 @@ def fetch_data(keyword=None):
             'Pegawai': result['Pegawai']['value']
         })
     
+    sparql.setQuery(get_query(keyword, limit=1000000, offset=0))  
+    total_results = sparql.query().convert()["results"]["bindings"]
+    total_school = len(total_results)
+
     return data, total_school
 
 @app.route("/")
 def index():
     keyword = request.args.get('keyword')
-    data, total_school = fetch_data(keyword)
-    return render_template("index.html", data=data, total_school=total_school)
+    page = int(request.args.get('page', 1))
+    limit = 10
+    data, total_school = fetch_data(keyword, page, limit)
+    total_pages = (total_school + limit - 1) / limit
+
+    return render_template("index.html", data=data, total_school=total_school, total_pages=int(total_pages), current_page=page)
 
 if __name__ == "__main__":
     app.run(debug=True)
